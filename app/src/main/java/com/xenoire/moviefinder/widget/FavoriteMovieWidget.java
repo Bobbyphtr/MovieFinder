@@ -30,10 +30,11 @@ public class FavoriteMovieWidget extends AppWidgetProvider {
         views.setRemoteAdapter(R.id.stackView, intent);
         views.setEmptyView(R.id.stackView, R.id.tv_widget_nodata);
         Log.d("FavoriteWidget", "   views.setEmptyView()");
-        Intent openAppIntent = new Intent(context, FavoriteMovieWidget.class);
+
+        Intent openAppIntent = new Intent(context, MainActivity.class);
         openAppIntent.setAction(OPEN_APP_ACTION);
         Log.d("FavoriteWidget", "   openAppIntent");
-        PendingIntent openAppPendingIntent = PendingIntent.getBroadcast(context, 0, openAppIntent, 0);
+        PendingIntent openAppPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, 0);
         views.setOnClickPendingIntent(appWidgetId, openAppPendingIntent);
         Log.d("FavoriteWidget", "   updateAppWidget()");
         // Instruct the widget manager to update the widget
@@ -60,12 +61,10 @@ public class FavoriteMovieWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-//        if(intent.getAction().equals(OPEN_APP_ACTION)){
-//            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-//            Intent openApp = new Intent(context.getApplicationContext(), MainActivity.class);
-//            context.startActivity(openApp);
-//        }
+        if(intent.getAction().equals(OPEN_APP_ACTION)){
+            Intent openApp = new Intent(context.getApplicationContext(), MainActivity.class);
+            context.startActivity(openApp);
+        }
         super.onReceive(context, intent);
     }
 }
