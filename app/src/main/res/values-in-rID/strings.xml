@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Movie Finder</string>
+    <string name="movie_title">Judul Film</string>
+    <string name="movie_poster">Poster Film</string>
+    <string name="overview">Miles Morales is juggling his life between being a high school student and being Spider-Man. However, when Wilson \"Kingpin\" Fisk uses a super collider, another Spider-Man from another dimension, Peter Parker, accidentally winds up in Miles\' dimension. As Peter trains Miles to become a better Spider-Man, they are soon joined by four other Spider-Men from across the \"Spider-Verse\". As all these clashing dimensions start to tear Brooklyn apart, Miles must help the others stop Fisk and return everyone to their own dimensions.</string>
+    <string name="shortOverview">Miles Morales is juggling his life between being a high school student and being Spider-Man. However, when Wilson ...</string>
+    <string name="spiderman">Spiderman</string>
+    <string name="quotes">kata bijak</string>
+    <string name="_7_0">7.0</string>
+    <string name="rating">peringkat</string>
+    <string name="duration">durasi</string>
+    <string name="en">EN</string>
+    <string name="language">bahasa</string>
+    <string name="_128">128</string>
+    <string name="genre">jenis</string>
+    <string name="overviewLabel">deskripsi</string>
+    <string name="up_coming">Akan Datang</string>
+    <string name="discover">Pencarian</string>
+    <string name="now_playing">Sedang Tayang</string>
+    <string name="_1998_04_10">1998-04-10</string>
+    <string name="release_date">tanggal rilis</string>
+    <string name="search_movie">Cari film</string>
+    <string name="change_language_settings">Ganti Bahasa</string>
+    <string name="favorite">Favorit</string>
+    <string name="sad">:(</string>
+    <string name="no_favorite_movie_yet">Belum ada film favorit!</string>
+    <string name="added_to_favorite">Film sudah ditambahkan ke Favorit!</string>
+    <string name="removed_from_favorite">Film sudah dihapus dari Favorit!</string>
+</resources>
