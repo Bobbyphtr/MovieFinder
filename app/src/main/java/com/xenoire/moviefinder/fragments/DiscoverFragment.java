@@ -14,9 +14,9 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
-import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.R;
 import com.xenoire.moviefinder.adapters.MyDiscoverAdapter;
+import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.loaders.DiscoverLoader;
 
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ public class DiscoverFragment extends Fragment implements android.support.v4.app
     private OnDiscoverItemClicked listener;
     public static final String TAG = "Discover Fragment";
     public static final String QUERY = "query";
+    public static final String CHANGE_STATE = "CHANGE_STATE";
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -71,6 +72,12 @@ public class DiscoverFragment extends Fragment implements android.support.v4.app
         });
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CHANGE_STATE, CHANGE_STATE);
     }
 
     @Nullable

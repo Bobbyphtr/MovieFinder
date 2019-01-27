@@ -29,4 +29,7 @@
     <string name="add_widget">Add widget</string>
     <string name="no_data">No data.</string>
     <string name="favorite_movie">My Favorite Movie</string>
+    <string name="movie_finder">Movie Finder</string>
+    <string name="movie_finder_is_missing_you">Movie Finder is missing you!</string>
+    <string name="movie_released_today">%s is released today!</string>
 </resources>

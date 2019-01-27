@@ -2,6 +2,7 @@ package com.xenoire.moviefinder.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.R;
 import com.xenoire.moviefinder.adapters.MyNowPlayingAdapter;
+import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.loaders.NowPlayingLoader;
 
 import java.util.ArrayList;
+
+import static com.xenoire.moviefinder.fragments.DiscoverFragment.CHANGE_STATE;
 
 /**
  * A fragment representing a list of Items.
@@ -80,6 +83,10 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onAttach(Context context) {

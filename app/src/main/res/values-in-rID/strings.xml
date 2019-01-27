@@ -27,4 +27,10 @@
     <string name="no_favorite_movie_yet">Belum ada film favorit!</string>
     <string name="added_to_favorite">Film sudah ditambahkan ke Favorit!</string>
     <string name="removed_from_favorite">Film sudah dihapus dari Favorit!</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="no_data">Tidak ada data.</string>
+    <string name="favorite_movie">Film Favorit</string>
+    <string name="movie_finder">Movie Finder</string>
+    <string name="movie_finder_is_missing_you">Movie Finder kangen anda!</string>
+    <string name="movie_released_today">%s sudah dirilis hari ini!</string>
 </resources>

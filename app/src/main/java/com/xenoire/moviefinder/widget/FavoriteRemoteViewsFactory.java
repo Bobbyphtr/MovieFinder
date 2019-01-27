@@ -34,7 +34,9 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public void onCreate() {
+        final long identityToken = Binder.clearCallingIdentity();
         movies = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
+        Binder.restoreCallingIdentity(identityToken);
         Log.d("RemoteViewsFactory", "   ON CREATE");
     }
 

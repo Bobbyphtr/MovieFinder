@@ -7,10 +7,12 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -27,8 +29,11 @@ import static com.xenoire.moviefinder.db.DatabaseContract.CONTENT_URI;
 public class MainActivity extends AppCompatActivity implements NowPlayingFragment.OnNowPlayingListFragmentItemClicked,
         DiscoverFragment.OnDiscoverItemClicked, UpComingFragment.OnUpComingListFragmentItemClicked,
         FavoriteFragment.OnFavoriteListFragmentItemClicked {
+
     public static final String TAG = "MovieFinder";
+    Fragment fragmentNow;
     BottomNavigationView bottomNavigationView;
+
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -38,27 +43,51 @@ public class MainActivity extends AppCompatActivity implements NowPlayingFragmen
             switch (menuItem.getItemId()) {
                 case R.id.item_nav_discover:
                     toolbar_title.setText(getResources().getString(R.string.discover));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new DiscoverFragment());
-                    fragmentTransaction.commit();
+                    fragmentNow = fragmentManager.findFragmentByTag(DiscoverFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new DiscoverFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, DiscoverFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     return true;
                 case R.id.item_nav_nowPlaying:
                     toolbar_title.setText(getResources().getString(R.string.now_playing));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new NowPlayingFragment());
-                    fragmentTransaction.commit();
+                    fragmentNow = fragmentManager.findFragmentByTag(NowPlayingFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new NowPlayingFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, NowPlayingFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     return true;
                 case R.id.item_nav_upComing:
                     toolbar_title.setText(getResources().getString(R.string.up_coming));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new UpComingFragment());
-                    fragmentTransaction.commit();
+                    fragmentNow = fragmentManager.findFragmentByTag(UpComingFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new UpComingFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, UpComingFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     return true;
                 case R.id.item_nav_favorite:
                     toolbar_title.setText(getResources().getString(R.string.favorite));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new FavoriteFragment());
-                    fragmentTransaction.commit();
+                    fragmentNow = fragmentManager.findFragmentByTag(FavoriteFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new FavoriteFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, FavoriteFragment.TAG).commit();
+                    }else{
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     return true;
             }
             return false;
@@ -79,49 +108,84 @@ public class MainActivity extends AppCompatActivity implements NowPlayingFragmen
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
+        //set alarm
+        AlarmReceiver ar = new AlarmReceiver();
+        ar.setAlarm(this, AlarmReceiver.NOTIF_TYPE_DAILY_REMINDER);
+        ar.setAlarm(this, AlarmReceiver.NOTIF_TYPE_RELEASED_TODAY);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (savedInstanceState != null && savedInstanceState.getInt(CURRENT_FRAGMENT_KEY, 0) != 0) {
+            fragmentNow = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT);
             switch (savedInstanceState.getInt(CURRENT_FRAGMENT_KEY)) {
                 case R.id.item_nav_nowPlaying:
                     toolbar_title.setText(getResources().getString(R.string.now_playing));
                     bottomNavigationView.setSelectedItemId(R.id.item_nav_nowPlaying);
-                    fragmentTransaction.replace(R.id.fragment_container, new NowPlayingFragment());
-                    fragmentTransaction.commit();
+                    fragmentNow = fragmentManager.findFragmentByTag(NowPlayingFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new NowPlayingFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, NowPlayingFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     break;
                 case R.id.item_nav_discover:
                     toolbar_title.setText(getResources().getString(R.string.discover));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new DiscoverFragment());
-                    fragmentTransaction.commit();
+                    bottomNavigationView.setSelectedItemId(R.id.item_nav_discover);
+                    fragmentNow = fragmentManager.findFragmentByTag(DiscoverFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new DiscoverFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, DiscoverFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     break;
                 case R.id.item_nav_favorite:
                     toolbar_title.setText(getResources().getString(R.string.favorite));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new FavoriteFragment());
-                    fragmentTransaction.commit();
+                    bottomNavigationView.setSelectedItemId(R.id.item_nav_favorite);
+                    fragmentNow = fragmentManager.findFragmentByTag(FavoriteFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new FavoriteFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, FavoriteFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     break;
                 case R.id.item_nav_upComing:
                     toolbar_title.setText(getResources().getString(R.string.up_coming));
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, new UpComingFragment());
-                    fragmentTransaction.commit();
+                    bottomNavigationView.setSelectedItemId(R.id.item_nav_upComing);
+                    fragmentNow = fragmentManager.findFragmentByTag(UpComingFragment.TAG);
+                    if (fragmentNow == null) {
+                        fragmentNow = new UpComingFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentNow, UpComingFragment.TAG).commit();
+                    } else {
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentNow);
+                        fragmentTransaction.commit();
+                    }
                     break;
             }
         } else {
             toolbar_title.setText(getResources().getString(R.string.now_playing));
             bottomNavigationView.setSelectedItemId(R.id.item_nav_nowPlaying);
-            fragmentTransaction.replace(R.id.fragment_container, new NowPlayingFragment());
+            fragmentTransaction.replace(R.id.fragment_container, new NowPlayingFragment(), NowPlayingFragment.TAG);
             fragmentTransaction.commit();
         }
     }
 
     private final String CURRENT_FRAGMENT_KEY = "current_fragment";
+    private final String CURRENT_FRAGMENT = "fragmentNow";
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_FRAGMENT_KEY, bottomNavigationView.getSelectedItemId());
+        if (fragmentNow.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT, fragmentNow);
+            Log.d(MainActivity.TAG, "   FRAGMENT ADDED");
+        }
     }
 
     @Override
