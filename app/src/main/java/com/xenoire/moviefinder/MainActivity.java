@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.xenoire.moviefinder.alarms.AlarmReceiver;
 import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.fragments.DiscoverFragment;
 import com.xenoire.moviefinder.fragments.FavoriteFragment;

@@ -1,4 +1,4 @@
-package com.xenoire.moviefinder;
+package com.xenoire.moviefinder.alarms;
 
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
@@ -17,6 +17,9 @@ import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
+import com.xenoire.moviefinder.BuildConfig;
+import com.xenoire.moviefinder.MainActivity;
+import com.xenoire.moviefinder.R;
 import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.fragments.NowPlayingFragment;
 
@@ -40,6 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static final String NOTIF_TYPE_RELEASED_TODAY = "released_today";
 
     private final int NOTIF_ID_DAILY_REMINDER = 50;
+    private final int NOTIF_ID_RELEASED_TODAY = 51;
 
     private final String CHANNEL_ID_DR = "DailyReminder";
     private final String CHANNEL_NAME_DR = "Daily Reminder";
@@ -56,12 +60,12 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String type = intent.getStringExtra(NOTIF_TYPE);
         this.context = context;
+        Log.d(TAG, "        ONRECEIVE");
         if(type.equalsIgnoreCase(NOTIF_TYPE_DAILY_REMINDER)){
             showNotification(context, NOTIF_ID_DAILY_REMINDER, type, null);
-        }else{
+        } else {
             setReleasedTodayAlarm();
         }
-        Log.d(TAG, "        ONRECEIVE");
     }
     private void showNotification(Context context, int notifId, String type, @Nullable String movieTitle) {
         NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -90,6 +94,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     mgr.createNotificationChannel(channel);
                 }
             }
+            Log.d(TAG, "SHOW NOTIFICATION () RELEASED TODAY");
         } else {
             //Daily Reminder
             Intent intent = new Intent(context, MainActivity.class);
@@ -113,13 +118,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                     mgr.createNotificationChannel(channel);
                 }
             }
+            Log.d(TAG, "SHOW NOTIFICATION () DAILYREMINDER");
         }
         if (mgr != null) {
             mgr.notify(notifId, builder.build());
+            Log.d(TAG, "NOTIFIED()");
         }
     }
 
     public void setAlarm(Context context, String type) {
+        PendingIntent pendingIntent = null;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(NOTIF_TYPE, NOTIF_TYPE_DAILY_REMINDER);
@@ -128,14 +136,15 @@ public class AlarmReceiver extends BroadcastReceiver {
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.HOUR, 7);
+            Log.d(TAG, "DailyReminder millis " + calendar.getTimeInMillis() + " date and time " + calendar.getTime().toString());
+            pendingIntent = PendingIntent.getBroadcast(context, NOTIF_ID_DAILY_REMINDER, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }else if (type.equalsIgnoreCase(NOTIF_TYPE_RELEASED_TODAY)){
             calendar.set(Calendar.HOUR_OF_DAY, 8);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.HOUR, 8);
+            Log.d(TAG, "Released Today millis " + calendar.getTimeInMillis() + " date and time " + calendar.getTime().toString());
+            pendingIntent = PendingIntent.getBroadcast(context, NOTIF_ID_RELEASED_TODAY, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIF_ID_DAILY_REMINDER, intent, 0);
         if (alarmManager != null) {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
