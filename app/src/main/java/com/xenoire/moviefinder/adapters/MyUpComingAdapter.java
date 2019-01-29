@@ -1,6 +1,7 @@
 package com.xenoire.moviefinder.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +27,15 @@ public class MyUpComingAdapter extends RecyclerView.Adapter<MyUpComingAdapter.Vi
         Context context1 = context;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.movieItem = movies.get(position);
         holder.tvTitle.setText(movies.get(position).getTitle());
         holder.tvOverview.setText(movies.get(position).getDescription());

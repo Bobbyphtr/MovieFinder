@@ -9,7 +9,8 @@
         android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/w185"/>
+        android:contentDescription="TODO"
+        android:src="@drawable/w185" />
 
     <TextView
         android:id="@+id/tv_movieTitle_widget"

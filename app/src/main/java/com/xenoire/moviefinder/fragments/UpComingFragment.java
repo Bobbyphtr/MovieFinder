@@ -3,6 +3,7 @@ package com.xenoire.moviefinder.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,9 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.R;
 import com.xenoire.moviefinder.adapters.MyUpComingAdapter;
+import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.loaders.UpComingLoader;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class UpComingFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvUpComing = view.findViewById(R.id.rv_upComing);
         loading = view.findViewById(R.id.progressBarUpComing);
@@ -51,7 +52,7 @@ public class UpComingFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_up_coming, container, false);
         ArrayList<Movie> upComingMovies = new ArrayList<>();
@@ -86,6 +87,7 @@ public class UpComingFragment extends Fragment implements LoaderManager.LoaderCa
         listener = null;
     }
 
+    @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         if (id == 3) {
@@ -99,7 +101,7 @@ public class UpComingFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         MyUpComingAdapter adapter = (MyUpComingAdapter) rvUpComing.getAdapter();
         adapter.setMovies(data);
         adapter.notifyDataSetChanged();
@@ -109,7 +111,7 @@ public class UpComingFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Movie>> loader) {
         MyUpComingAdapter adapter = (MyUpComingAdapter) rvUpComing.getAdapter();
         adapter.setMovies(null);
         Log.d(UpComingFragment.TAG, "OnLoaderReset");

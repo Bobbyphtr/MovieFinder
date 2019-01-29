@@ -32,5 +32,4 @@
     <string name="movie_finder">Movie Finder</string>
     <string name="movie_finder_is_missing_you">Movie Finder is missing you!</string>
     <string name="movie_released_today">%s is released today!</string>
-    <string name="appwidget_text">EXAMPLE</string>
 </resources>

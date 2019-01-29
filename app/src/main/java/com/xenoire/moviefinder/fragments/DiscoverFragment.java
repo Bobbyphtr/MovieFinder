@@ -86,6 +86,7 @@ public class DiscoverFragment extends Fragment implements android.support.v4.app
         return inflater.inflate(R.layout.fragment_discover, container, false);
     }
 
+    @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int i, Bundle bundle) {
         if (i == 0) {
@@ -101,7 +102,7 @@ public class DiscoverFragment extends Fragment implements android.support.v4.app
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         myDiscoverAdapter.setMovies(data);
         myDiscoverAdapter.notifyDataSetChanged();
         progressBar.setVisibility(View.GONE);
@@ -110,7 +111,7 @@ public class DiscoverFragment extends Fragment implements android.support.v4.app
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Movie>> loader) {
         myDiscoverAdapter.setMovies(null);
     }
 

@@ -23,8 +23,6 @@ import com.xenoire.moviefinder.loaders.NowPlayingLoader;
 
 import java.util.ArrayList;
 
-import static com.xenoire.moviefinder.fragments.DiscoverFragment.CHANGE_STATE;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -55,7 +53,7 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rvNowPlaying = view.findViewById(R.id.rv_nowPlaying);
         loading = view.findViewById(R.id.progressBarNowPlaying);
@@ -63,7 +61,7 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nowplaying_list, container, false);
         nowPlayingMovies = new ArrayList<>();
@@ -105,6 +103,7 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
         mListener = null;
     }
 
+    @NonNull
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         if (id == 2) {
@@ -118,7 +117,7 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         MyNowPlayingAdapter adapter = (MyNowPlayingAdapter) rvNowPlaying.getAdapter();
         adapter.setMovies(data);
         adapter.notifyDataSetChanged();
@@ -128,7 +127,7 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Movie>> loader) {
         MyNowPlayingAdapter adapter = (MyNowPlayingAdapter) rvNowPlaying.getAdapter();
         adapter.setMovies(null);
         Log.d(NowPlayingFragment.TAG, "onLoaderReset");
