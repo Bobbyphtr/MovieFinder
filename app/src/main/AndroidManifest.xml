@@ -39,6 +39,11 @@
             android:readPermission="com.xenoire.moviefinder.READ_DATABASE"
             android:writePermission="com.xenoire.moviefinder.WRITE_DATABASE" />
 
+        <receiver
+            android:name=".alarms.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <receiver android:name=".widget.FavoriteMovieWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -50,12 +55,10 @@
         </receiver>
 
         <service android:name=".widget.FavoriteWidgetService"
+            android:enabled="true"
+            android:exported="true"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <receiver
-            android:name=".alarms.AlarmReceiver"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>

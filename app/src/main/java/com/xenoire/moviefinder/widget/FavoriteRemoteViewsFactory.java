@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -13,21 +14,22 @@ import android.widget.RemoteViewsService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.xenoire.moviefinder.R;
+import com.xenoire.moviefinder.db.Movie;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static com.xenoire.moviefinder.db.DatabaseContract.CONTENT_URI;
-import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.POSTER_URL;
-import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.TITLE;
 
 public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context context;
     private Cursor movies;
+    private ArrayList<Movie> movieArrayList = new ArrayList<>();
     private int favWidgetid;
 
-    public FavoriteRemoteViewsFactory(Context context, Intent intent) {
-        this.context = context;
+    public FavoriteRemoteViewsFactory(Context applicationContext, Intent intent) {
+        this.context = applicationContext;
         favWidgetid = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         Log.d("RemoteViewsFactory", "   CONSTRUCTOR");
     }
@@ -36,6 +38,13 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
     public void onCreate() {
         final long identityToken = Binder.clearCallingIdentity();
         movies = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
+        if (movies != null) {
+            movies.moveToFirst();
+            movieArrayList.clear();
+            for (int i = 0; i < movies.getCount(); i++) {
+                movieArrayList.add(getItem(i));
+            }
+        }
         Binder.restoreCallingIdentity(identityToken);
         Log.d("RemoteViewsFactory", "   ON CREATE");
     }
@@ -44,6 +53,13 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
     public void onDataSetChanged() {
         final long identityToken = Binder.clearCallingIdentity();
         movies = context.getContentResolver().query(CONTENT_URI, null, null, null, null);
+        if (movies != null) {
+            movies.moveToFirst();
+            movieArrayList.clear();
+            for (int i = 0; i < movies.getCount(); i++) {
+                movieArrayList.add(getItem(i));
+            }
+        }
         Binder.restoreCallingIdentity(identityToken);
     }
 
@@ -54,18 +70,18 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public int getCount() {
-        Log.d("RemoteViewsFactory", "   GetCount : " + movies.getCount());
-        return movies.getCount();
+        Log.d("RemoteViewsFactory", "   GetCount movies (cursor): " + movies.getCount());
+        Log.d("RemoteViewsFactory", "   GetCount movies (ArrayList): " + movieArrayList.size());
+        return movieArrayList.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_favorite_item);
-        movies.move(i);
         try {
             Bitmap banner = Glide.with(context)
                     .asBitmap()
-                    .load(movies.getString(movies.getColumnIndexOrThrow(POSTER_URL)))
+                    .load(movieArrayList.get(i).getPosterUrl())
                     .apply(new RequestOptions().fitCenter())
                     .submit()
                     .get();
@@ -74,8 +90,15 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
             e.printStackTrace();
             Log.e("WidgetFav", "GLIDE ERROR");
         }
-        rv.setTextViewText(R.id.tv_movieTitle_widget, movies.getString(movies.getColumnIndexOrThrow(TITLE)));
-        Log.d("RemoteViewsFactory", "   getViewAt : " + movies.getString(movies.getColumnIndexOrThrow(TITLE)));
+        rv.setTextViewText(R.id.tv_movieTitle_widget, movieArrayList.get(i).getTitle());
+        Log.d("RemoteViewsFactory", "   getViewAt : " + movieArrayList.get(i).getTitle());
+
+        Bundle extras = new Bundle();
+        extras.putInt(FavoriteMovieWidget.MOVIE_ID, movieArrayList.get(i).getId());
+        Log.d("RemoteViewsFactory", "ID" + movieArrayList.get(i).getId());
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra(FavoriteMovieWidget.MOVIE_ID, extras);
+        rv.setOnClickFillInIntent(R.id.iv_poster_widget, fillInIntent);
         return rv;
     }
 
@@ -86,7 +109,6 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public int getViewTypeCount() {
-        Log.d("RemoteViewsFactory", "   GetViewTypeCount()");
         return 1;
     }
 
@@ -98,5 +120,12 @@ public class FavoriteRemoteViewsFactory implements RemoteViewsService.RemoteView
     @Override
     public boolean hasStableIds() {
         return false;
+    }
+
+    private Movie getItem(int position) {
+        if (!movies.moveToPosition(position)) {
+            throw new IllegalStateException("Position is invalid");
+        }
+        return new Movie(movies);
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/iv_poster_widget"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/w185"/>
@@ -21,5 +21,6 @@
         android:textColor="@color/white"
         android:background="@color/widget_text_bg"
         android:lines="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:textAlignment="center" />
 </FrameLayout>

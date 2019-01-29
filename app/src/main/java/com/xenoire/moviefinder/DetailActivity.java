@@ -2,6 +2,7 @@ package com.xenoire.moviefinder;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import com.xenoire.moviefinder.db.FavoriteMovieHelper;
 import com.xenoire.moviefinder.db.Movie;
 import com.xenoire.moviefinder.loaders.DiscoverLoader;
+import com.xenoire.moviefinder.widget.FavoriteMovieWidget;
 
 import org.json.JSONObject;
 
@@ -37,6 +39,7 @@ import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.O
 import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.OVERVIEW;
 import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.POSTER_URL;
 import static com.xenoire.moviefinder.db.DatabaseContract.FavoriteMovieColumns.TITLE;
+import static com.xenoire.moviefinder.widget.FavoriteMovieWidget.UPDATE_WIDGET_ACTION;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -141,6 +144,9 @@ public class DetailActivity extends AppCompatActivity {
                         helper.close();
                         Snackbar.make(getWindow().getDecorView().getRootView(), getResources().getString(R.string.added_to_favorite), Snackbar.LENGTH_SHORT).show();
                     }
+                    Intent i = new Intent(this, FavoriteMovieWidget.class);
+                    i.setAction(UPDATE_WIDGET_ACTION);
+                    sendBroadcast(i);
                 }
                 break;
         }
@@ -216,5 +222,10 @@ public class DetailActivity extends AppCompatActivity {
             });
             return movies[0];
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
